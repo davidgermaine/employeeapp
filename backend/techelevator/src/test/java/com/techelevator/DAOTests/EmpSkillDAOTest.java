@@ -2,6 +2,7 @@ package com.techelevator.DAOTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
@@ -108,6 +109,19 @@ public class EmpSkillDAOTest {
 	}
 	
 	@Test
+	public void getSkillFromEmployeeById_returns_proper_skill() {
+		Field field = testField("Generic name", "Generic type");
+		Skill skill = testSkill(field.getId(), 24, "Skill summary");
+		Address address = testAddress("Street", "Suite", "City", "RGN", "Postal", "US");
+		Employee employee = testEmployee("John", "Doe", address.getId(), "ContactEmail@place.com", 
+				"CompanyEmail@company.com", "YYYY-MM-DD", "YYYY-MM-DD", "Role", "Business Unit", "Assigned To");
+	
+		empskillDAO.addSkillToEmployee(employee.getId(), skill.getId());
+		Skill returnedSkill = empskillDAO.getSkillFromEmployeeById(employee.getId(), skill.getId());
+		assertSkillsAreEqual(skill, returnedSkill);
+	}
+	
+	@Test
 	public void updateSkillFromEmployeeById_updates_skill_under_employee() {
 		Field field = testField("Generic name", "Generic type");
 		Skill skill = testSkill(field.getId(), 24, "Skill summary");
@@ -127,6 +141,26 @@ public class EmpSkillDAOTest {
 		empskillDAO.updateSkillFromEmployeeById(employee.getId(), skill.getId(), updatedSkill);
 		Skill returnedSkill = skillDAO.getSkillById(skill.getId());
 		assertSkillsAreEqual(returnedSkill, updatedSkill);
+	}
+	
+	@Test
+	public void deleteSkillFromEmployeeById_removes_skill_from_employee() {
+		Field field = testField("Generic name", "Generic type");
+		Skill skill = testSkill(field.getId(), 24, "Skill summary");
+		Address address = testAddress("Street", "Suite", "City", "RGN", "Postal", "US");
+		Employee employee = testEmployee("John", "Doe", address.getId(), "ContactEmail@place.com", 
+				"CompanyEmail@company.com", "YYYY-MM-DD", "YYYY-MM-DD", "Role", "Business Unit", "Assigned To");
+		
+		empskillDAO.addSkillToEmployee(employee.getId(), skill.getId());
+		List<Skill> skillList = empskillDAO.getAllSkillsByEmployeeId(employee.getId());
+		int initialCount = skillList.size();
+		
+		empskillDAO.deleteSkillFromEmployeeById(employee.getId(), skill.getId());
+		skillList = empskillDAO.getAllSkillsByEmployeeId(employee.getId());
+		int postCount = skillList.size();
+		
+		assertEquals(initialCount - 1, postCount);
+		assertNull(empskillDAO.getSkillFromEmployeeById(employee.getId(), skill.getId()));
 	}
 	
 	private Field testField(String name, String type) {

@@ -67,11 +67,18 @@ public class EmpSkillJDBCDAO implements EmpSkillDAO {
 		jdbcTemplate.update(sql, empskill.getId(), empskill.getEmployee(), empskill.getSkill());
 	}
 
-//	@Override
-//	public Skill getSkillFromEmployee(String employeeId, String skillId) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	@Override
+	public Skill getSkillFromEmployeeById(String employeeId, String skillId) {
+		String sql = "SELECT skills.* FROM skills "
+				+ "JOIN employee_skills ON skills.id = employee_skills.skill "
+				+ "WHERE employee_skills.employee = ? AND employee_skills.skill = ?";
+		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, employeeId, skillId);
+		Skill skill = null;
+		while (result.next()) {
+			skill = mapRowToSkill(result);
+		}
+		return skill;
+	}
 
 	@Override
 	public void updateSkillFromEmployeeById(String employeeId, String skillId, Skill updatedSkill) {
@@ -85,8 +92,8 @@ public class EmpSkillJDBCDAO implements EmpSkillDAO {
 
 	@Override
 	public void deleteSkillFromEmployeeById(String employeeId, String skillId) {
-		// TODO Auto-generated method stub
-
+		String sql = "DELETE FROM employee_skills WHERE employee = ? AND skill = ?";
+		jdbcTemplate.update(sql, employeeId, skillId);
 	}
 
 }
