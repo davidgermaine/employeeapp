@@ -64,7 +64,7 @@ COMMIT TRANSACTION;
 
 BEGIN TRANSACTION;    
         
-DROP TABLE IF EXISTS employees_skills;
+DROP TABLE IF EXISTS employee_skills;
 CREATE TABLE employee_skills (
         id varchar(40) PRIMARY KEY,
         employee varchar(40) NOT NULL,        
