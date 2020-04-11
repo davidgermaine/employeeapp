@@ -93,39 +93,15 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
 	}
 
 	@Override
-	public List<Skill> getAllSkillsByEmployeeId(String employeeId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void addSkillToEmployee(String employeeId, Skill newSkill) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Skill getSkillFromEmployee(String employeeId, String skillId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateSkillFromEmployeeById(String employeeId, String skillId, Skill updatedSkill) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void deleteSkillFromEmployeeById(String employeeId, String skillId) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public List<Employee> getEmployeesByRole(String employeeRole) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Employee> employeeList = new ArrayList<>();
+		String sql = "SELECT * FROM employees WHERE role = ?";
+		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, employeeRole);
+		while (result.next()) {
+			Employee employee = mapRowToEmployee(result);
+			employeeList.add(employee);
+		}
+		return employeeList;
 	}
 
 }

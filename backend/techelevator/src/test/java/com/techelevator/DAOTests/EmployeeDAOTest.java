@@ -1,9 +1,7 @@
 package com.techelevator.DAOTests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
@@ -143,6 +141,24 @@ public class EmployeeDAOTest {
 		int postCount = employeeList.size();
 		
 		assertEquals(initialCount - 1, postCount);
+	}
+	
+	@Test
+	public void getEmployeesByRole_retrieves_all_employees_with_role() {
+		List<Employee> employeeList = employeeDAO.getEmployeesByRole("Test Role");
+		int initialCount = employeeList.size();
+		
+		Address address = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
+		addressDAO.createAddress(address);
+		Employee employee = testEmployee("First", "Last", address.getId(), "test@site.com", "test@company.com", 
+				"1996-01-01", "2020-06-01", "Test Role", "Test Unit", "");
+		employeeDAO.createEmployee(employee);
+		
+		employeeList = employeeDAO.getEmployeesByRole("Test Role");
+		assertNotNull(employeeList);
+		int postCount = employeeList.size();
+		
+		assertEquals(initialCount + 1, postCount);
 	}
 	
 	private Address testAddress(String street, String suite, String city, String region, String postal, String country) {
