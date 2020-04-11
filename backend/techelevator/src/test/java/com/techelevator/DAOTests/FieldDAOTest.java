@@ -1,6 +1,7 @@
 package com.techelevator.DAOTests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
@@ -56,7 +57,7 @@ public class FieldDAOTest {
 			initialCount = result.getInt("count");
 		}
 		
-		Field field = testField();
+		Field field = testField("Test Field", "Test Type");
 		fieldDAO.createField(field);
 		int postCount = 0;
 		result = jdbcTemplate.queryForRowSet(sql);
@@ -77,15 +78,30 @@ public class FieldDAOTest {
 		assertFieldsAreEqual(field, resultField);
 	}
 	
-	private Field testField() {
+	@Test
+	public void getFieldById_retrieves_proper_field() {
+		Field field1 = testField("Name 1", "Type 1");
+		Field field2 = testField("Name 2", "Type 2");
+		fieldDAO.createField(field1);
+		fieldDAO.createField(field2);
+		
+		Field field1Return = fieldDAO.getFieldById(field1.getId());
+		Field field2Return = fieldDAO.getFieldById(field2.getId());
+		assertFieldsAreEqual(field1, field1Return);
+		assertFieldsAreEqual(field2, field2Return);
+	}
+	
+	private Field testField(String name, String type) {
 		Field field = new Field();
 		field.setId(fieldDAO.generateUUID());
-		field.setName("Test Name");
-		field.setType("Test type of longer name");
+		field.setName(name);
+		field.setType(type);
 		return field;
 	}
 	
 	private void assertFieldsAreEqual(Field field1, Field field2) {
+		assertNotNull(field1);
+		assertNotNull(field2);
 		assertTrue(field1.getId().equals(field2.getId()));
 		assertTrue(field1.getName().equals(field2.getName()));
 		assertTrue(field1.getType().equals(field2.getType()));

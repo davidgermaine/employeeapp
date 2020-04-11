@@ -38,6 +38,17 @@ public class FieldJDBCDAO implements FieldDAO {
 		String sql = "INSERT INTO fields (id, name, type) VALUES (?, ?, ?)";
 		jdbcTemplate.update(sql, field.getId(), field.getName(), field.getType());
 	}
+	
+	@Override
+    public Field getFieldById(String fieldId) {
+    	String sql = "SELECT * FROM fields WHERE id = ?";
+    	SqlRowSet result = jdbcTemplate.queryForRowSet(sql, fieldId);
+    	Field field = null;
+    	while (result.next()) {
+    		field = mapRowToField(result);    		
+    	}
+    	return field;
+    }
 
 	@Override
 	public List<Field> getAllFields() {
@@ -45,11 +56,11 @@ public class FieldJDBCDAO implements FieldDAO {
 		return null;
 	}
 
-	@Override
-	public Field getFieldBySkillId(String skillId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public Field getFieldBySkillId(String skillId) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public void deleteFieldById(String fieldId) {
