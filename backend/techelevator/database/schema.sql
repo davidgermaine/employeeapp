@@ -57,8 +57,7 @@ CREATE TABLE employees (
         businessunit varchar(50),
         assignedto varchar(40),
         
-        CONSTRAINT FK_addresses FOREIGN KEY (address) references addresses (id),
-        CONSTRAINT FK_employees FOREIGN KEY (assignedto) references employees (id)        
+        CONSTRAINT FK_addresses FOREIGN KEY (address) references addresses (id)     
 );
 
 COMMIT TRANSACTION;      
