@@ -2,6 +2,7 @@ package com.techelevator.DAOTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
@@ -108,6 +109,28 @@ public class FieldDAOTest {
 		int postCount = fieldDAO.getAllFields().size();
 		assertNotNull(fieldDAO.getAllFields());
 		assertEquals(initialCount + 4, postCount);
+	}
+	
+	@Test
+	public void deleteFieldById_deletes_field_from_database() {
+		Field field1 = testField("Name 1", "Type 1");
+		Field field2 = testField("Name 2", "Type 2");
+		Field field3 = testField("Name 3", "Type 3");
+		Field field4 = testField("Name 4", "Type 4");
+		fieldDAO.createField(field1);
+		fieldDAO.createField(field2);
+		fieldDAO.createField(field3);
+		fieldDAO.createField(field4);
+		
+		int initialCount = fieldDAO.getAllFields().size();
+		fieldDAO.deleteFieldById(field1.getId());
+		int postCount = fieldDAO.getAllFields().size();
+		
+		assertEquals(initialCount - 1, postCount);
+		assertNull(fieldDAO.getFieldById(field1.getId()));
+		assertNotNull(fieldDAO.getFieldById(field2.getId()));
+		assertNotNull(fieldDAO.getFieldById(field3.getId()));
+		assertNotNull(fieldDAO.getFieldById(field4.getId()));
 	}
 	
 	private Field testField(String name, String type) {

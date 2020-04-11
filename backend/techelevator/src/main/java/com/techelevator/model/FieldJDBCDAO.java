@@ -1,5 +1,6 @@
 package com.techelevator.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,8 +53,14 @@ public class FieldJDBCDAO implements FieldDAO {
 
 	@Override
 	public List<Field> getAllFields() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Field> fieldList = new ArrayList<>();
+		String sql = "SELECT * FROM fields";
+		SqlRowSet result = jdbcTemplate.queryForRowSet(sql);
+		while (result.next()) {
+			Field field = mapRowToField(result);
+			fieldList.add(field);
+		}
+		return fieldList;
 	}
 
 //	@Override
@@ -64,8 +71,8 @@ public class FieldJDBCDAO implements FieldDAO {
 
 	@Override
 	public void deleteFieldById(String fieldId) {
-		// TODO Auto-generated method stub
-
+		String sql = "DELETE FROM fields WHERE id = ?";
+		jdbcTemplate.update(sql, fieldId);
 	}
 
 }
