@@ -46,14 +46,20 @@ public class AddressJDBCDAO implements AddressDAO {
 
 	@Override
 	public Address getAddressById(String addressId) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT * FROM addresses WHERE id = ?";
+		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, addressId);
+		Address address = null;
+		while (result.next()) {
+			address = mapRowToAddress(result);
+		}
+		return address;
 	}
 
 	@Override
 	public void updateAddressById(String addressId, Address updatedAddress) {
-		// TODO Auto-generated method stub
-
+		String sql = "UPDATE addresses SET street = ?, suite = ?, city = ?, region = ?, postal = ?, country = ? WHERE id = ?";
+		jdbcTemplate.update(sql, updatedAddress.getStreet(), updatedAddress.getSuite(), updatedAddress.getCity(), 
+				updatedAddress.getRegion(), updatedAddress.getPostal(), updatedAddress.getCountry(), addressId);
 	}
 
 	@Override

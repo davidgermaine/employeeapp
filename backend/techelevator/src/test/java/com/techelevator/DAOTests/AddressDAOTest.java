@@ -70,6 +70,39 @@ public class AddressDAOTest {
 		assertEquals(initialCount + 1, postCount);
 	}
 	
+	@Test
+	public void getAddressById_retrieves_proper_address() {
+		Address firstAddress = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
+		Address secondAddress = testAddress("Test Avenue", "Test Suite", "Test Township", "WI", "54915", "US");
+		addressDAO.createAddress(firstAddress);
+		addressDAO.createAddress(secondAddress);
+		
+		Address returnFirstAddress = addressDAO.getAddressById(firstAddress.getId());
+		Address returnSecondAddress = addressDAO.getAddressById(secondAddress.getId());
+		
+		assertAddressesAreEqual(firstAddress, returnFirstAddress);
+		assertAddressesAreEqual(secondAddress, returnSecondAddress);
+	}
+	
+	@Test
+	public void updateAddressById_updates_address_info() {
+		Address address = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
+		addressDAO.createAddress(address);
+		
+		Address updatedAddress = new Address();
+		updatedAddress.setId(address.getId());
+		updatedAddress.setStreet("Updated Boulevard");
+		updatedAddress.setSuite("Updated Suite");
+		updatedAddress.setCity("Updated Precinct");
+		updatedAddress.setRegion("CA");
+		updatedAddress.setPostal("90210");
+		updatedAddress.setCountry("US");
+		addressDAO.updateAddressById(address.getId(), updatedAddress);
+		
+		Address returnedAddress = addressDAO.getAddressById(updatedAddress.getId());
+		assertAddressesAreEqual(updatedAddress, returnedAddress);
+	}
+	
 	private Address testAddress(String street, String suite, String city, String region, String postal, String country) {
 		Address address = new Address();
 		address.setStreet(street);
