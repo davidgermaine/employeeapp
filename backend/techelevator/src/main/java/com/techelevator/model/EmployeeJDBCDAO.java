@@ -1,5 +1,6 @@
 package com.techelevator.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,8 +44,14 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
 
 	@Override
 	public List<Employee> getAllEmployees() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Employee> employeeList = new ArrayList<>();
+		String sql = "SELECT * FROM employees";
+		SqlRowSet result = jdbcTemplate.queryForRowSet(sql);
+		while (result.next()) {
+			Employee employee = mapRowToEmployee(result);
+			employeeList.add(employee);
+		}
+		return employeeList;
 	}
 
 	@Override
@@ -59,20 +66,30 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
 
 	@Override
 	public Employee getEmployeeById(String employeeId) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT * FROM employees WHERE id = ?";
+		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, employeeId);
+		Employee employee = new Employee();
+		while (result.next()) {
+			employee = mapRowToEmployee(result);
+		}
+		return employee;
 	}
 
 	@Override
 	public void updateEmployeeById(String employeeId, Employee updatedEmployee) {
-		// TODO Auto-generated method stub
-
+		String sql = "UPDATE employees SET firstname = ?, lastname = ?, address = ?, contactemail = ?, "
+				+ "companyemail = ?, birthdate = ?, hireddate = ?, role = ?, businessunit = ?, assignedto = ? "
+				+ "WHERE id = ?";
+		jdbcTemplate.update(sql, updatedEmployee.getFirstName(), updatedEmployee.getLastName(), updatedEmployee.getAddress(), 
+				updatedEmployee.getContactEmail(), updatedEmployee.getCompanyEmail(), updatedEmployee.getBirthDate(), 
+				updatedEmployee.getHiredDate(), updatedEmployee.getRole(), updatedEmployee.getBusinessUnit(), 
+				updatedEmployee.getAssignedTo(), employeeId);
 	}
 
 	@Override
 	public void deleteEmployeeById(String employeeId) {
-		// TODO Auto-generated method stub
-
+		String sql = "DELETE FROM employees WHERE id = ?";
+		jdbcTemplate.update(sql, employeeId);
 	}
 
 	@Override

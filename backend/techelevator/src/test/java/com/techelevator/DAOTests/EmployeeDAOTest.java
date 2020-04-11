@@ -1,9 +1,13 @@
 package com.techelevator.DAOTests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,18 +22,12 @@ import com.techelevator.model.Address;
 import com.techelevator.model.AddressJDBCDAO;
 import com.techelevator.model.Employee;
 import com.techelevator.model.EmployeeJDBCDAO;
-import com.techelevator.model.Field;
-import com.techelevator.model.FieldJDBCDAO;
-import com.techelevator.model.Skill;
-import com.techelevator.model.SkillJDBCDAO;
 
 public class EmployeeDAOTest {
 	
 	private static SingleConnectionDataSource dataSource;
 	private EmployeeJDBCDAO employeeDAO;
 	private AddressJDBCDAO addressDAO;
-	private FieldJDBCDAO fieldDAO;
-	private SkillJDBCDAO skillDAO;
 	
 	@BeforeClass
 	public static void setupDataSource() {
@@ -49,8 +47,6 @@ public class EmployeeDAOTest {
 	public void setup() {
 		employeeDAO = new EmployeeJDBCDAO(dataSource);
 		addressDAO = new AddressJDBCDAO(dataSource);
-		fieldDAO = new FieldJDBCDAO(dataSource);
-		skillDAO = new SkillJDBCDAO(dataSource);
 	}
 	
 	@After
@@ -85,21 +81,68 @@ public class EmployeeDAOTest {
 		assertEquals(initialCount + 1, postCount);
 	}
 	
-	private Field testField(String name, String type) {
-		Field field = new Field();
-		field.setName(name);
-		field.setType(type);
-		fieldDAO.createField(field);
-		return field;
+	@Test
+	public void getAllEmployees_returns_all_employees() {
+		List<Employee> employeeList = employeeDAO.getAllEmployees();
+		int initialCount = employeeList.size();
+		
+		Address address = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
+		addressDAO.createAddress(address);
+		Employee employee = testEmployee("First", "Last", address.getId(), "test@site.com", "test@company.com", 
+				"1996-01-01", "2020-06-01", "Test Role", "Test Unit", "");
+		employeeDAO.createEmployee(employee);
+		
+		employeeList = employeeDAO.getAllEmployees();
+		int postCount = employeeList.size();
+		
+		assertEquals(initialCount + 1, postCount);
 	}
 	
-	private Skill testSkill(String fieldId, int experience, String summary) {
-		Skill skill = new Skill();
-    	skill.setField(fieldId);
-    	skill.setExperience(experience);
-    	skill.setSummary(summary);
-    	skillDAO.createSkill(skill);
-    	return skill;
+	@Test
+	public void getEmployeeById_returns_proper_employee() {
+		Address address = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
+		addressDAO.createAddress(address);
+		Employee employee = testEmployee("First", "Last", address.getId(), "test@site.com", "test@company.com", 
+				"1996-01-01", "2020-06-01", "Test Role", "Test Unit", "");
+		employeeDAO.createEmployee(employee);
+		
+		Employee returnedEmployee = employeeDAO.getEmployeeById(employee.getId());
+		assertEmployeesAreEqual(employee, returnedEmployee);
+	}
+	
+	@Test
+	public void updateEmployeeById_updates_proper_employee() {
+		Address address = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
+		addressDAO.createAddress(address);
+		Address address2 = testAddress("Test Highway", "Test Condo", "Test Village", "MI", "48072", "US");
+		addressDAO.createAddress(address2);
+		Employee employee = testEmployee("First", "Last", address.getId(), "test@site.com", "test@company.com", 
+				"1996-01-01", "2020-06-01", "Test Role", "Test Unit", "");
+		employeeDAO.createEmployee(employee);
+		
+		Employee updatedEmployee = testEmployee("NewFirst", "NewLast", address2.getId(), "new@org.net", "new@company.com", 
+				"1993-06-06", "2019-10-14", "New Role", "New Unit", "ManagerId goes here");
+		updatedEmployee.setId(employee.getId());
+		employeeDAO.updateEmployeeById(employee.getId(), updatedEmployee);
+		
+		assertEmployeesAreEqual(updatedEmployee, employeeDAO.getEmployeeById(employee.getId()));
+	}
+	
+	@Test
+	public void deleteEmployeeById_removes_employee_from_database() {
+		Address address = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
+		addressDAO.createAddress(address);
+		Employee employee = testEmployee("First", "Last", address.getId(), "test@site.com", "test@company.com", 
+				"1996-01-01", "2020-06-01", "Test Role", "Test Unit", "");
+		employeeDAO.createEmployee(employee);
+		
+		List<Employee> employeeList = employeeDAO.getAllEmployees();
+		int initialCount = employeeList.size();
+		employeeDAO.deleteEmployeeById(employee.getId());
+		employeeList = employeeDAO.getAllEmployees();
+		int postCount = employeeList.size();
+		
+		assertEquals(initialCount - 1, postCount);
 	}
 	
 	private Address testAddress(String street, String suite, String city, String region, String postal, String country) {
@@ -128,6 +171,22 @@ public class EmployeeDAOTest {
 		employee.setBusinessUnit(businessUnit);
 		employee.setAssignedTo(assignedTo);
 		return employee;
+	}
+	
+	private void assertEmployeesAreEqual(Employee employee1, Employee employee2) {
+		assertNotNull(employee1);
+		assertNotNull(employee2);
+		assertTrue(employee1.getId().equals(employee2.getId()));
+		assertTrue(employee1.getFirstName().equals(employee2.getFirstName()));
+		assertTrue(employee1.getLastName().equals(employee2.getLastName()));
+		assertTrue(employee1.getAddress().equals(employee2.getAddress()));
+		assertTrue(employee1.getContactEmail().equals(employee2.getContactEmail()));
+		assertTrue(employee1.getCompanyEmail().equals(employee2.getCompanyEmail()));
+		assertTrue(employee1.getBirthDate().equals(employee2.getBirthDate()));
+		assertTrue(employee1.getHiredDate().equals(employee2.getHiredDate()));
+		assertTrue(employee1.getRole().equals(employee2.getRole()));
+		assertTrue(employee1.getBusinessUnit().equals(employee2.getBusinessUnit()));
+		assertTrue(employee1.getAssignedTo().equals(employee2.getAssignedTo()));
 	}
 
 }
