@@ -67,16 +67,6 @@ public class FieldDAOTest {
 		}
 		
 		assertEquals(initialCount + 1, postCount);
-		
-		String fieldSql = "SELECT * FROM fields WHERE id = ?";
-		result = jdbcTemplate.queryForRowSet(fieldSql, field.getId());
-		Field resultField = new Field();
-		while (result.next()) {
-			resultField.setId(result.getString("id"));
-			resultField.setName(result.getString("name"));
-			resultField.setType(result.getString("type"));
-		}
-		assertFieldsAreEqual(field, resultField);
 	}
 	
 	@Test

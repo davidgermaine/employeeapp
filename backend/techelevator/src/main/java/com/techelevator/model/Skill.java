@@ -3,7 +3,7 @@ package com.techelevator.model;
 public class Skill {
 	
 	private String id;
-	private Field field;
+	private String field;
 	private int experience;
 	private String summary;
 	
@@ -14,10 +14,10 @@ public class Skill {
 		this.id = id;
 	}
 	
-	public Field getField() {
+	public String getField() {
 		return field;
 	}
-	public void setField(Field field) {
+	public void setField(String field) {
 		this.field = field;
 	}
 	

@@ -37,6 +37,7 @@ public class FieldJDBCDAO implements FieldDAO {
 	@Override
 	public void createField(Field field) {
 		String sql = "INSERT INTO fields (id, name, type) VALUES (?, ?, ?)";
+		field.setId(generateUUID());
 		jdbcTemplate.update(sql, field.getId(), field.getName(), field.getType());
 	}
 	
