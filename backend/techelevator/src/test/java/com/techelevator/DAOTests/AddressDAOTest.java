@@ -2,6 +2,7 @@ package com.techelevator.DAOTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
@@ -101,6 +102,34 @@ public class AddressDAOTest {
 		
 		Address returnedAddress = addressDAO.getAddressById(updatedAddress.getId());
 		assertAddressesAreEqual(updatedAddress, returnedAddress);
+	}
+	
+	@Test
+	public void deleteAddressById_removes_address_from_database() {
+		Address firstAddress = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
+		Address secondAddress = testAddress("Test Avenue", "Test Suite", "Test Township", "WI", "54915", "US");
+		addressDAO.createAddress(firstAddress);
+		addressDAO.createAddress(secondAddress);
+		
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		String sql = "SELECT COUNT(*) FROM addresses";
+		SqlRowSet result = jdbcTemplate.queryForRowSet(sql);
+		int initialCount = 0;
+		while (result.next()) {
+			initialCount = result.getInt("count");
+		}
+		
+		addressDAO.deleteAddressById(firstAddress.getId());
+		
+		result = jdbcTemplate.queryForRowSet(sql);
+		int postCount = 0;
+		while (result.next()) {
+			postCount = result.getInt("count");
+		}
+		
+		assertEquals(initialCount - 1, postCount);
+		assertNull(addressDAO.getAddressById(firstAddress.getId()));
+		assertAddressesAreEqual(secondAddress, addressDAO.getAddressById(secondAddress.getId()));
 	}
 	
 	private Address testAddress(String street, String suite, String city, String region, String postal, String country) {

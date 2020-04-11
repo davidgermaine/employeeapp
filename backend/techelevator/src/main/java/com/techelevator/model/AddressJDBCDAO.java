@@ -64,8 +64,8 @@ public class AddressJDBCDAO implements AddressDAO {
 
 	@Override
 	public void deleteAddressById(String addressId) {
-		// TODO Auto-generated method stub
-
+		String sql = "DELETE FROM addresses WHERE id = ?";
+		jdbcTemplate.update(sql, addressId);
 	}
 
 }
