@@ -91,6 +91,25 @@ public class FieldDAOTest {
 		assertFieldsAreEqual(field2, field2Return);
 	}
 	
+	@Test
+	public void getAllFields_returns_all_fields_in_database() {
+		int initialCount = fieldDAO.getAllFields().size();
+		assertNotNull(fieldDAO.getAllFields());
+		
+		Field field1 = testField("Name 1", "Type 1");
+		Field field2 = testField("Name 2", "Type 2");
+		Field field3 = testField("Name 3", "Type 3");
+		Field field4 = testField("Name 4", "Type 4");
+		fieldDAO.createField(field1);
+		fieldDAO.createField(field2);
+		fieldDAO.createField(field3);
+		fieldDAO.createField(field4);
+		
+		int postCount = fieldDAO.getAllFields().size();
+		assertNotNull(fieldDAO.getAllFields());
+		assertEquals(initialCount + 4, postCount);
+	}
+	
 	private Field testField(String name, String type) {
 		Field field = new Field();
 		field.setId(fieldDAO.generateUUID());
