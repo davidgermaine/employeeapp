@@ -93,6 +93,27 @@ public class SkillDAOTest {
 	}
 	
 	@Test
+	public void updateSkillById_updates_proper_skill() {
+		Field firstField = testField("Name 1", "Type 1");
+		Skill firstSkill = testSkill(firstField.getId(), 24, "");
+		skillDAO.createSkill(firstSkill);
+		
+		Field secondField = testField("Name 2", "Type 2");
+		Skill secondSkill = testSkill(secondField.getId(), 36, "Summary with text in it");
+		skillDAO.createSkill(secondSkill);
+		
+		Skill updatedFirstSkill = firstSkill;
+		updatedFirstSkill.setField(secondSkill.getField());
+		updatedFirstSkill.setExperience(0);
+		updatedFirstSkill.setSummary("This has been updated");
+		skillDAO.updateSkillById(firstSkill.getId(), updatedFirstSkill);
+		
+		assertNotNull(skillDAO.getSkillById(firstSkill.getId()));
+		assertSkillsAreEqual(secondSkill, skillDAO.getSkillById(secondSkill.getId()));
+		assertSkillsAreEqual(updatedFirstSkill, skillDAO.getSkillById(firstSkill.getId()));
+	}
+	
+	@Test
 	public void deleteSkillById_deletes_skill_from_database() {
 		Field firstField = testField("Name 1", "Type 1");
 		Skill firstSkill = testSkill(firstField.getId(), 24, "");

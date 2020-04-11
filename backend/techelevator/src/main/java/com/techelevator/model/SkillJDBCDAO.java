@@ -50,6 +50,12 @@ public class SkillJDBCDAO implements SkillDAO {
 		}
 		return skill;
 	}
+	
+	@Override
+	public void updateSkillById(String skillId, Skill skill) {
+		String sql = "UPDATE skills SET field = ?, experience = ?, summary = ? WHERE id = ?";
+		jdbcTemplate.update(sql, skill.getField(), skill.getExperience(), skill.getSummary(), skillId);
+	}
 
 	@Override
 	public void deleteSkillById(String skillId) {
