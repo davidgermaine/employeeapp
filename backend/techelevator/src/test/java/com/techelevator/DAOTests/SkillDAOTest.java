@@ -56,7 +56,7 @@ public class SkillDAOTest {
 	public void createSkill_adds_skill_to_database() {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		Field field = testField("Test Name", "Test Field");
-		Skill skill = testSkill(field.getId(), 24, "");
+		Skill skill = testSkill(field, 24, "");
 		assertNotNull(skill);
 		
 		String sql = "SELECT COUNT(*) FROM skills";
@@ -79,11 +79,11 @@ public class SkillDAOTest {
 	@Test
 	public void getSkillById_returns_proper_skill() {
 		Field firstField = testField("Name 1", "Type 1");
-		Skill firstSkill = testSkill(firstField.getId(), 24, "");
+		Skill firstSkill = testSkill(firstField, 24, "");
 		skillDAO.createSkill(firstSkill);
 		
 		Field secondField = testField("Name 2", "Type 2");
-		Skill secondSkill = testSkill(secondField.getId(), 36, "Summary with text in it");
+		Skill secondSkill = testSkill(secondField, 36, "Summary with text in it");
 		skillDAO.createSkill(secondSkill);
 		
 		Skill testFirstSkill = skillDAO.getSkillById(firstSkill.getId());
@@ -95,11 +95,11 @@ public class SkillDAOTest {
 	@Test
 	public void updateSkillById_updates_proper_skill() {
 		Field firstField = testField("Name 1", "Type 1");
-		Skill firstSkill = testSkill(firstField.getId(), 24, "");
+		Skill firstSkill = testSkill(firstField, 24, "");
 		skillDAO.createSkill(firstSkill);
 		
 		Field secondField = testField("Name 2", "Type 2");
-		Skill secondSkill = testSkill(secondField.getId(), 36, "Summary with text in it");
+		Skill secondSkill = testSkill(secondField, 36, "Summary with text in it");
 		skillDAO.createSkill(secondSkill);
 		
 		Skill updatedFirstSkill = firstSkill;
@@ -116,11 +116,11 @@ public class SkillDAOTest {
 	@Test
 	public void deleteSkillById_deletes_skill_from_database() {
 		Field firstField = testField("Name 1", "Type 1");
-		Skill firstSkill = testSkill(firstField.getId(), 24, "");
+		Skill firstSkill = testSkill(firstField, 24, "");
 		skillDAO.createSkill(firstSkill);
 		
 		Field secondField = testField("Name 2", "Type 2");
-		Skill secondSkill = testSkill(secondField.getId(), 36, "Summary with text in it");
+		Skill secondSkill = testSkill(secondField, 36, "Summary with text in it");
 		skillDAO.createSkill(secondSkill);
 		
 		skillDAO.deleteSkillById(firstSkill.getId());
@@ -139,9 +139,9 @@ public class SkillDAOTest {
 		return field;
 	}
 	
-	private Skill testSkill(String fieldId, int experience, String summary) {
+	private Skill testSkill(Field field, int experience, String summary) {
 		Skill skill = new Skill();
-    	skill.setField(fieldId);
+    	skill.setField(field);
     	skill.setExperience(experience);
     	skill.setSummary(summary);
     	return skill;
@@ -151,9 +151,19 @@ public class SkillDAOTest {
 		assertNotNull(skill1);
 		assertNotNull(skill2);
 		assertTrue(skill1.getId().equals(skill2.getId()));
-		assertTrue(skill1.getField().equals(skill2.getField()));
+		
+		assertFieldsAreEqual(skill1.getField(), skill2.getField());
+		
 		assertTrue(skill1.getExperience() == skill2.getExperience());
 		assertTrue(skill1.getSummary().equals(skill2.getSummary()));
+	}
+	
+	private void assertFieldsAreEqual(Field field1, Field field2) {
+		assertNotNull(field1);
+		assertNotNull(field2);
+		assertTrue(field1.getId().equals(field2.getId()));
+		assertTrue(field1.getName().equals(field2.getName()));
+		assertTrue(field1.getType().equals(field2.getType()));
 	}
 
 }

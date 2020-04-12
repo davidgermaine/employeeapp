@@ -13,16 +13,18 @@ import org.springframework.stereotype.Component;
 public class SkillJDBCDAO implements SkillDAO {
 	
 	private final JdbcTemplate jdbcTemplate;
+	private FieldJDBCDAO fieldDAO;
 	
 	@Autowired
     public SkillJDBCDAO(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.fieldDAO = new FieldJDBCDAO(dataSource);
     }
 	
 	private Skill mapRowToSkill(SqlRowSet result) {
     	Skill skill = new Skill();
     	skill.setId(result.getString("id"));
-    	skill.setField(result.getString("field"));
+    	skill.setField(fieldDAO.getFieldById(result.getString("field")));
     	skill.setExperience(result.getInt("experience"));
     	skill.setSummary(result.getString("summary"));
     	return skill;
@@ -37,7 +39,7 @@ public class SkillJDBCDAO implements SkillDAO {
 	public void createSkill(Skill skill) {
 		String sql = "INSERT INTO skills (id, field, experience, summary) VALUES (?, ?, ?, ?)";
 		skill.setId(generateUUID());
-		jdbcTemplate.update(sql, skill.getId(), skill.getField(), skill.getExperience(), skill.getSummary());
+		jdbcTemplate.update(sql, skill.getId(), skill.getField().getId(), skill.getExperience(), skill.getSummary());
 	}
 	
 	@Override
@@ -54,7 +56,7 @@ public class SkillJDBCDAO implements SkillDAO {
 	@Override
 	public void updateSkillById(String skillId, Skill skill) {
 		String sql = "UPDATE skills SET field = ?, experience = ?, summary = ? WHERE id = ?";
-		jdbcTemplate.update(sql, skill.getField(), skill.getExperience(), skill.getSummary(), skillId);
+		jdbcTemplate.update(sql, skill.getField().getId(), skill.getExperience(), skill.getSummary(), skillId);
 	}
 
 	@Override

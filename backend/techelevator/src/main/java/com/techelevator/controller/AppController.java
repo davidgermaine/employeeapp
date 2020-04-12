@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.model.AddressDAO;
-import com.techelevator.model.EmpSkillDAO;
 import com.techelevator.model.Employee;
 import com.techelevator.model.EmployeeDAO;
 import com.techelevator.model.FieldDAO;
@@ -29,9 +28,6 @@ public class AppController {
 	
 	@Autowired
 	private EmployeeDAO employeeDAO;
-	
-	@Autowired
-	private EmpSkillDAO empskillDAO;
 	
 	@GetMapping("/employees")
 	public List<Employee> getAllEmployees() {

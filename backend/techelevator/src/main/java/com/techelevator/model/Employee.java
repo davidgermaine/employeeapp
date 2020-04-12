@@ -1,17 +1,20 @@
 package com.techelevator.model;
 
+import java.util.List;
+
 public class Employee {
 	
 	private String id;
 	private String firstName;
 	private String lastName;
-	private String address;
+	private Address address;
 	private String contactEmail;
 	private String companyEmail;
 	private String birthDate;
 	private String hiredDate;
 	private String role;
 	private String businessUnit;
+	private List<Skill> skills;
 	private String assignedTo;
 	
 	public String getId() {
@@ -35,10 +38,10 @@ public class Employee {
 		this.lastName = lastName;
 	}
 	
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 	
@@ -82,6 +85,13 @@ public class Employee {
 	}
 	public void setBusinessUnit(String businessUnit) {
 		this.businessUnit = businessUnit;
+	}
+	
+	public List<Skill> getSkills() {
+		return skills;
+	}
+	public void setSkills(List<Skill> skills) {
+		this.skills = skills;
 	}
 	
 	public String getAssignedTo() {

@@ -1,6 +1,14 @@
 BEGIN TRANSACTION;
 
+DROP TABLE IF EXISTS employee_skills;
+DROP TABLE IF EXISTS employees;
+DROP TABLE IF EXISTS addresses;
+DROP TABLE IF EXISTS skills;
 DROP TABLE IF EXISTS fields;
+
+COMMIT TRANSACTION;
+
+BEGIN TRANSACTION;
 
 CREATE TABLE fields (
   id varchar(40) PRIMARY KEY,
@@ -13,7 +21,6 @@ COMMIT TRANSACTION;
 
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS skills;
 CREATE TABLE skills (
         id varchar(40) PRIMARY KEY,
         field varchar(40) NOT NULL,
@@ -27,7 +34,6 @@ COMMIT TRANSACTION;
         
 BEGIN TRANSACTION;
 
-DROP TABLE IF EXISTS addresses;
 CREATE TABLE addresses (
         id varchar(40) PRIMARY KEY,
         street varchar(100) NOT NULL,
@@ -41,8 +47,7 @@ CREATE TABLE addresses (
 COMMIT TRANSACTION;   
 
 BEGIN TRANSACTION;    
-        
-DROP TABLE IF EXISTS employees;
+      
 CREATE TABLE employees (
         
         id varchar(40) PRIMARY KEY,
@@ -64,9 +69,7 @@ COMMIT TRANSACTION;
 
 BEGIN TRANSACTION;    
         
-DROP TABLE IF EXISTS employee_skills;
 CREATE TABLE employee_skills (
-        id varchar(40) PRIMARY KEY,
         employee varchar(40) NOT NULL,        
         skill varchar(40) NOT NULL,
         
