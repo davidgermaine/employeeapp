@@ -32,5 +32,11 @@ public class AppController {
 	
 	@Autowired
 	private EmpSkillDAO empskillDAO;
+	
+	@GetMapping("/employees")
+	public List<Employee> getAllEmployees() {
+	    List<Employee> allEmployees = employeeDAO.getAllEmployees();
+	    return allEmployees;
+	}
 
 }
