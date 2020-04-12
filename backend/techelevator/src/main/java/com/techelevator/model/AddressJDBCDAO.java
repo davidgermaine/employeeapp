@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddressJDBCDAO implements AddressDAO {
 	
-	private final JdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 
     @Autowired
     public AddressJDBCDAO(DataSource dataSource) {

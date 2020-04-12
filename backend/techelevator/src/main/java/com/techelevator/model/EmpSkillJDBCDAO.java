@@ -21,14 +21,6 @@ public class EmpSkillJDBCDAO implements EmpSkillDAO {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     
-//    private EmpSkill mapRowToEmpSkill(SqlRowSet result) {
-//    	EmpSkill empskill = new EmpSkill();
-//    	empskill.setId(result.getString("id"));
-//    	empskill.setEmployee("employee");
-//    	empskill.setSkill("skill");
-//    	return empskill;
-//    }
-    
     private Skill mapRowToSkill(SqlRowSet result) {
     	Skill skill = new Skill();
     	skill.setId(result.getString("id"));
