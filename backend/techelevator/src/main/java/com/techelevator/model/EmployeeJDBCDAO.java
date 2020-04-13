@@ -39,6 +39,7 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
     	employee.setHiredDate(result.getString("hireddate"));
     	employee.setRole(result.getString("role"));
     	employee.setBusinessUnit(result.getString("businessunit"));
+    	employee.setSkills(getAllSkillsByEmployeeId(result.getString("id")));
     	employee.setAssignedTo(result.getString("assignedto"));
     	return employee;
     }

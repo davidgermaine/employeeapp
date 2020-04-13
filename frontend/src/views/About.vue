@@ -1,26 +1,39 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-    <ul>
-      <li v-for="employee in allEmployees" v-bind:key="employee.id">
-        {{employee.firstName}}
-      </li>
-    </ul>
+  <div class="employees">
+    <div v-if="shouldShowEmployees">
+      <button id="addEmployeeForm" v-on:click="showAddEmployeeForm"> Add Employee </button>
+      <EmployeeInfo/>
+    </div>
+    <div v-if="shouldShowAddEmployeeForm">
+      <AddEmployeeForm @hideAddEmployeeForm="showEmployeeForm"/>
+    </div>
   </div>
 </template>
 
 <script>
+import EmployeeInfo from '@/components/EmployeeInfo.vue'
+import AddEmployeeForm from '@/components/AddEmployeeForm.vue'
+
 export default {
   data() {
     return {
-      allEmployees: []
+      shouldShowEmployees: true,
+      shouldShowAddEmployeeForm: false,
     }
   },
-  created() {
-    fetch('http://localhost:8080/employeeapp/employees')
-    .then ( (response) => {return response.json()})
-    .then ( (employeeData) => {this.allEmployees = employeeData;})
-    .catch( (err) => {console.log(err)})
+  methods: {
+    showAddEmployeeForm() {
+      this.shouldShowEmployees = false;
+      this.shouldShowAddEmployeeForm = true;
+    },
+    showEmployeeForm() {
+      this.shouldShowEmployees = true;
+      this.shouldShowAddEmployeeForm = false;
+    }
+  },
+  components: {
+    EmployeeInfo,
+    AddEmployeeForm
   }
 }
 </script>
