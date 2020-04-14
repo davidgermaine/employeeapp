@@ -211,5 +211,6 @@ export default {
 <style>
     #edit-employee-form {
         text-align: center;
+        border: 2px solid black;
     }
 </style>

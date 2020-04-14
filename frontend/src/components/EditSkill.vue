@@ -112,5 +112,9 @@ export default {
 </script>
 
 <style>
-
+    #edit-skill-form {
+        display: inline-block;
+        border: 2px solid black;
+        padding: 8px 8px 8px 8px;
+    }
 </style>

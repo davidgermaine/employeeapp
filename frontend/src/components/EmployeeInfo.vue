@@ -14,10 +14,12 @@
                         {{employee.businessUnit}}
                     </div>
                     <div v-if="employee.assignedTo != null">
-                        Assigned to: {{employee.assignedTo}}
+                        Assigned to: {{assignedToEmployee.firstName}} {{assignedToEmployee.lastName}}
                     </div>
                 </div>
+
                 <div id="space2"><br></div>
+
                 <div id="dates2">
                     <div class="mini-header"> Extra Info </div>
                     Birthday: {{employee.birthDate}}<br>
@@ -37,7 +39,7 @@
                     {{employee.address.city}}, {{employee.address.region}} {{employee.address.postal}}, {{employee.address.country}}
                 </div>
                 <div id="buttons2">
-                    <button v-on:click.prevent="edit"> Edit Employee </button>
+                    <br><button v-on:click.prevent="edit"> Edit Employee </button>
                 </div>
 
                 <div id="space3"><br></div>
@@ -95,6 +97,7 @@ export default {
                 businessUnit: " ",
                 assignedTo: " "
             },
+            assignedToEmployee: {},
             skills: [],
             selectedSkillId: "",
             selectedEmployeeId: "",
@@ -159,7 +162,25 @@ export default {
             .then ( (response) => {return response.json()})
             .then ( (skillsData) => {
                 this.skills = skillsData;
+                this.getAssignedTo();
             })
+            .catch( (err) => {console.log(err)});
+        },
+
+        getAssignedTo() {
+            fetch(`http://localhost:8080/employeeapp/employees/${this.employee.assignedTo}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Tpye": "application/json"
+                    }
+                }
+            )
+            .then ( (response) => {return response.json()})
+            .then ( (returnedEmployee) => {
+            this.assignedToEmployee = returnedEmployee;
+        })
             .catch( (err) => {console.log(err)});
         },
 
@@ -194,7 +215,7 @@ export default {
             ". title2 . emails2 ."
             "space2 space2 space2 space2 space2"
             ". address2 . dates2 ."
-            ". . . buttons2 ."
+            ". buttons2 . . ."
             "space3 space3 space3 space3 space3"
             ". skills2 skills2 skills2 .";
 
@@ -238,7 +259,7 @@ export default {
 
     #buttons2 {
         grid-area: buttons2;
-        text-align: right;
+        text-align: left;
     }
 
     #skills2 {

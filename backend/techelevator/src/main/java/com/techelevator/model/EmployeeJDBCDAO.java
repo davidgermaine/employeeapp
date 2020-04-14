@@ -61,7 +61,7 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
 	@Override
 	public List<Employee> getAllEmployees() {
 		List<Employee> employeeList = new ArrayList<>();
-		String sql = "SELECT * FROM employees";
+		String sql = "SELECT * FROM employees ORDER BY employees.lastname";
 		SqlRowSet result = jdbcTemplate.queryForRowSet(sql);
 		while (result.next()) {
 			Employee employee = mapRowToEmployee(result);
@@ -137,7 +137,8 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
 		List<Skill> skillList = new ArrayList<>();
 		String sql = "SELECT skills.* FROM skills "
 				+ "JOIN employee_skills ON skills.id = employee_skills.skill "
-				+ "WHERE employee_skills.employee = ?";
+				+ "JOIN fields ON skills.field = fields.id "
+				+ "WHERE employee_skills.employee = ? ORDER BY fields.name";
 		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, employeeId);
 		while (result.next()) {
 			Skill skill = mapRowToSkill(result);

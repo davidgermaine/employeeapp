@@ -11,7 +11,7 @@
                         {{employee.businessUnit}}
                     </div>
                     <div v-if="employee.assignedTo != null">
-                        Assigned to: {{employee.assignedTo}}
+                        Assigned to: {{assignedToEmployee.firstName}} {{assignedToEmployee.lastName}}
                     </div>
                 </div>
             </div>
@@ -26,7 +26,11 @@
 export default {
     data() {
         return {
+            assignedToEmployee: {}
         }
+    },
+    created() {
+        this.getAssignedTo();
     },
     props: {
         employee: {
@@ -46,6 +50,23 @@ export default {
     methods: {
         showMoreEmployeeInfo() {
             this.$emit('showMoreEmployeeInfo', this.employee.id);
+        },
+
+        getAssignedTo() {
+            fetch(`http://localhost:8080/employeeapp/employees/${this.employee.assignedTo}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Tpye": "application/json"
+                    }
+                }
+            )
+            .then ( (response) => {return response.json()})
+            .then ( (returnedEmployee) => {
+            this.assignedToEmployee = returnedEmployee;
+        })
+            .catch( (err) => {console.log(err)});
         }
     }
 }

@@ -8,11 +8,14 @@
 </template>
 
 <style>
+body {
+  background-color:#d1d1d1
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: #000000;
 }
 
 #nav {
@@ -25,6 +28,6 @@
 }
 
 #nav a.router-link-exact-active {
-  color: #4b4b4b;
+  color: #000000;
 }
 </style>
