@@ -98,6 +98,8 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
 		String sql = "UPDATE employees SET firstname = ?, lastname = ?, address = ?, contactemail = ?, "
 				+ "companyemail = ?, birthdate = ?, hireddate = ?, role = ?, businessunit = ?, assignedto = ? "
 				+ "WHERE id = ?";
+		List<Skill> skillList = new ArrayList<>();
+		updatedEmployee.setSkills(skillList);
 		jdbcTemplate.update(sql, updatedEmployee.getFirstName(), updatedEmployee.getLastName(), updatedEmployee.getAddress().getId(), 
 				updatedEmployee.getContactEmail(), updatedEmployee.getCompanyEmail(), updatedEmployee.getBirthDate(), 
 				updatedEmployee.getHiredDate(), updatedEmployee.getRole(), updatedEmployee.getBusinessUnit(), 

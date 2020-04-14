@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="employee">
+        <div class="employee-min">
             <div id="card-header">
                 <div id="name">
                     {{employee.firstName}} {{employee.lastName}}
@@ -15,24 +15,8 @@
                     </div>
                 </div>
             </div>
-            <div id="space"><br></div>
-            <div id="dates">
-                Birthday: {{employee.birthDate}}<br>
-                Date of hire: {{employee.hiredDate}}
-            </div>
-            <div id="emails">
-                Contact email: {{employee.contactEmail}}<br>
-                Company email: {{employee.companyEmail}}
-            </div>
-            <div id="address">
-                {{employee.address.street}}<br>
-                <div v-if="employee.address.suite != null">
-                    {{employee.address.suite}}
-                </div>
-                {{employee.address.city}}, {{employee.address.region}} {{employee.address.postal}}, {{employee.address.country}}
-            </div>
             <div id="buttons">
-                <button v-on:click.prevent=""> More Info </button>
+                <button v-on:click.prevent="showMoreEmployeeInfo"> More Info </button>
             </div>
         </div>
     </div>
@@ -46,6 +30,7 @@ export default {
     },
     props: {
         employee: {
+            id: "",
             firstName: "",
             lastName: "",
             address: {},
@@ -57,29 +42,34 @@ export default {
             businessUnit: " ",
             assignedTo: " "
         },
+    },
+    methods: {
+        showMoreEmployeeInfo() {
+            this.$emit('showMoreEmployeeInfo', this.employee.id);
+        }
     }
 }
 </script>
 
 <style>
-    .employee {
+    .employee-min {
+        margin: 8px 8px 8px 8px;
+        padding: 8px 8px 8px 8px;
         display: grid;
-        grid-template-columns: 1fr 15fr 1fr 15fr 1fr;
+        grid-template-columns: 1fr 10fr 1fr;
         grid-template-areas: 
-            ". header . emails ."
-            "space space space space space"
-            ". address . dates .";
+            ". header .";
 
     }
 
     #card-header {
         display: inline-block;
+        text-align: center;
         grid-area: header;
     }
 
     #name {
         display: inline-block;
-        text-align: left;
         font-weight: bold;
         grid-area: name;
     }
@@ -89,26 +79,8 @@ export default {
         grid-area: title;
     }
 
-    #space {
-        grid-area: space;
-    }
-
-    #dates {
-        display: inline-block;
-        grid-area: dates;
-    }
-
-    #emails {
-        display: inline-block;
-        grid-area: emails;
-    }
-
-    #address {
-        display: inline-block;
-        grid-area: address;
-    }
-
     #buttons {
         grid-area: buttons;
     }
+
 </style>

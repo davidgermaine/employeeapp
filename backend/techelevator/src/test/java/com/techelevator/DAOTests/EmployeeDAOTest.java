@@ -247,8 +247,6 @@ public class EmployeeDAOTest {
 			postCount = result.getInt("count");
 		}
 		
-		System.out.println(postCount);
-		
 		assertEquals(initialCount + 1, postCount);
 	}
 	

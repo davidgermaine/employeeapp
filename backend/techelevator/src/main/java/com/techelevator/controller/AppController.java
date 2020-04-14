@@ -83,7 +83,9 @@ public class AppController {
 	@DeleteMapping("/employees/{employeeId}")
 	@ResponseStatus(HttpStatus.OK)
 	public void removeEmployeeFromId(@PathVariable String employeeId) {
+		String addressId = employeeDAO.getEmployeeById(employeeId).getAddress().getId();
 		employeeDAO.deleteEmployeeById(employeeId);
+		addressDAO.deleteAddressById(addressId);
 	}
 
 }

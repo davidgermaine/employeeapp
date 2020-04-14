@@ -2,12 +2,18 @@
   <div class="employees">
     <div v-if="shouldShowEmployees" id="employee-list">
       <button id="addEmployeeForm" v-on:click="showAddEmployeeForm"> Add Employee </button>
-      <div v-for="employee in allEmployees" :key="employee.id" :selectedEmployee="employee">
-        <EmployeeList v-bind:employee="employee" id="list-of-employees"/>
+      <div v-for="employee in allEmployees" :key="employee.id">
+        <EmployeeList v-bind:employee="employee" id="list-of-employees" :selectedEmployeeId="employee.id" @showMoreEmployeeInfo="showMoreEmployeeInfo"/>
       </div>
     </div>
     <div v-if="shouldShowAddEmployeeForm">
-      <AddEmployeeForm @hideAddEmployeeForm="showEmployeeForm"/>
+      <AddEmployeeForm @hideAddEmployeeForm="showEmployees"/>
+    </div>
+    <div v-if="shouldShowMoreEmployeeInfo">
+      <EmployeeInfo v-bind:employeeId="selectedEmployeeId" @returnToList="showEmployees" @showEditEmployee="showEditEmployeeForm"/>
+    </div>
+    <div v-if="shouldShowEditEmployee">
+      <EditEmployee v-bind:initial="selectedEmployee" @returnToInfo="showMoreEmployeeInfo" @returnToHome="showEmployees"/>
     </div>
   </div>
 </template>
@@ -15,13 +21,18 @@
 <script>
 import EmployeeList from '@/components/EmployeeList.vue'
 import AddEmployeeForm from '@/components/AddEmployeeForm.vue'
+import EmployeeInfo from '@/components/EmployeeInfo.vue'
+import EditEmployee from '@/components/EditEmployee.vue'
 
 export default {
   data() {
     return {
       shouldShowEmployees: true,
       shouldShowAddEmployeeForm: false,
+      shouldShowMoreEmployeeInfo: false,
+      shouldShowEditEmployee: false,
       allEmployees: [],
+      selectedEmployeeId: "",
       selectedEmployee: {}
     }
   },
@@ -29,16 +40,44 @@ export default {
     showAddEmployeeForm() {
       this.shouldShowEmployees = false;
       this.shouldShowAddEmployeeForm = true;
+      this.shouldShowMoreEmployeeInfo = false;
+      this.shouldShowEditEmployee = false;
     },
 
-    showEmployeeForm() {
+    showEmployees() {
       this.shouldShowEmployees = true;
       this.shouldShowAddEmployeeForm = false;
+      this.shouldShowMoreEmployeeInfo = false;
+      this.shouldShowEditEmployee = false;
       this.getEmployeeList();
+    },
+
+    showMoreEmployeeInfo(id) {
+      this.shouldShowEmployees = false;
+      this.shouldShowAddEmployeeForm = false;
+      this.shouldShowMoreEmployeeInfo = true;
+      this.shouldShowEditEmployee = false;
+      this.selectedEmployeeId = id;
+    },
+
+    showEditEmployeeForm(anEmployee) {
+      this.shouldShowEmployees = false;
+      this.shouldShowAddEmployeeForm = false;
+      this.shouldShowMoreEmployeeInfo = false;
+      this.shouldShowEditEmployee = true;
+      this.selectedEmployee = anEmployee;
     },
     
     getEmployeeList() {
-      fetch('http://localhost:8080/employeeapp/employees')
+      fetch('http://localhost:8080/employeeapp/employees',
+        {
+          method: 'GET',
+          headers: {
+            Accept: "application/json",
+            "Content-Tpye": "application/json"
+          }
+        }
+      )
       .then ( (response) => {return response.json()})
       .then ( (employeeData) => {
         this.allEmployees = employeeData;
@@ -48,7 +87,9 @@ export default {
   },
   components: {
     EmployeeList,
-    AddEmployeeForm
+    AddEmployeeForm,
+    EmployeeInfo,
+    EditEmployee
   },
   created() {
     this.getEmployeeList();
