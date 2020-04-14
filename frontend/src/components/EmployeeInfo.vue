@@ -1,23 +1,38 @@
 <template>
     <div>
         <div v-for="employee in allEmployees" v-bind:key="employee.id" class="employee">
-            <div id="name">
-                {{employee.firstName}} {{employee.lastName}}
+            <div id="card-header">
+                <div id="name">
+                    {{employee.firstName}} {{employee.lastName}}
+                </div>
+                <div id="title">
+                    {{employee.role}}
+                    <div v-if="employee.businessUnit != null">
+                        {{employee.businessUnit}}
+                    </div>
+                    <div v-if="employee.assignedTo != null">
+                        Assigned to: {{employee.assignedTo}}
+                    </div>
+                </div>
             </div>
-            <div id="title">
-                {{employee.role}} for {{employee.businessUnit}}<br>
-                Assigned to: {{employee.assignedTo}}
-            </div>
-            <div id="info">
+            <div id="space"><br></div>
+            <div id="dates">
                 Birthday: {{employee.birthDate}}<br>
-                Date of hire: {{employee.hiredDate}}<br>
+                Date of hire: {{employee.hiredDate}}
+            </div>
+            <div id="emails">
                 Contact email: {{employee.contactEmail}}<br>
                 Company email: {{employee.companyEmail}}
             </div>
             <div id="address">
                 {{employee.address.street}}<br>
-                {{employee.address.suite}}<br>
+                <div v-if="employee.address.suite != null">
+                    {{employee.address.suite}}
+                </div>
                 {{employee.address.city}}, {{employee.address.region}} {{employee.address.postal}}, {{employee.address.country}}
+            </div>
+            <div id="buttons">
+                <button v-on:click.prevent=""> More Info </button>
             </div>
         </div>
     </div>
@@ -27,18 +42,71 @@
 export default {
     data() {
         return {
-            allEmployees: []
+            allEmployees: [],
         }
     },
     created() {
         fetch('http://localhost:8080/employeeapp/employees')
         .then ( (response) => {return response.json()})
-        .then ( (employeeData) => {this.allEmployees = employeeData;})
-        .catch( (err) => {console.log(err)})
+        .then ( (employeeData) => {
+            this.allEmployees = employeeData;
+        })
+        .catch( (err) => {console.log(err)});
     }
 }
 </script>
 
 <style>
+    .employee {
+        display: grid;
+        border: 2px solid black;
+        padding: 8px 8px 8px 8px;
+        margin: 8px 8px 8px 8px;
+        grid-template-columns: 1fr 15fr 1fr 15fr 1fr;
+        grid-template-areas: 
+            ". header . emails ."
+            "space space space space space"
+            ". address . dates .";
 
+    }
+
+    #card-header {
+        display: inline-block;
+        grid-area: header;
+    }
+
+    #name {
+        display: inline-block;
+        text-align: left;
+        font-weight: bold;
+        grid-area: name;
+    }
+
+    #title {
+        font-style: italic;
+        grid-area: title;
+    }
+
+    #space {
+        grid-area: space;
+    }
+
+    #dates {
+        display: inline-block;
+        grid-area: dates;
+    }
+
+    #emails {
+        display: inline-block;
+        grid-area: emails;
+    }
+
+    #address {
+        display: inline-block;
+        grid-area: address;
+    }
+
+    #buttons {
+        grid-area: buttons;
+    }
 </style>

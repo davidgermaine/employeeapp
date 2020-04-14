@@ -17,14 +17,12 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
 	private final JdbcTemplate jdbcTemplate;
 	private AddressJDBCDAO addressDAO;
 	private FieldJDBCDAO fieldDAO;
-	private SkillJDBCDAO skillDAO;
 
     @Autowired
     public EmployeeJDBCDAO(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.addressDAO = new AddressJDBCDAO(dataSource);
         this.fieldDAO = new FieldJDBCDAO(dataSource);
-        this.skillDAO = new SkillJDBCDAO(dataSource);
     }
     
     private Employee mapRowToEmployee(SqlRowSet result) {
@@ -78,9 +76,9 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
 		jdbcTemplate.update(sql, employee.getId(), employee.getFirstName(), employee.getLastName(), employee.getAddress().getId(), 
 				employee.getContactEmail(), employee.getCompanyEmail(), employee.getBirthDate(), employee.getHiredDate(), 
 				employee.getRole(), employee.getBusinessUnit(), employee.getAssignedTo());
-		for (Skill skill : employee.getSkills()) {
-			addSkillToEmployee(employee.getId(), skill.getId());
-		}
+//		for (Skill skill : employee.getSkills()) {
+//			addSkillToEmployee(employee.getId(), skill.getId());
+//		}
 	}
 
 	@Override

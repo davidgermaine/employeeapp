@@ -1,6 +1,6 @@
 <template>
   <div class="employees">
-    <div v-if="shouldShowEmployees">
+    <div v-if="shouldShowEmployees" id="employee-list">
       <button id="addEmployeeForm" v-on:click="showAddEmployeeForm"> Add Employee </button>
       <EmployeeInfo/>
     </div>
@@ -37,3 +37,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  #employee-list {
+    margin: 8px 8px 8px 8px;
+  }
+</style>

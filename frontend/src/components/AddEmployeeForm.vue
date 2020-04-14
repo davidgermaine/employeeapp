@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div id="add-employee-form">
         <h3> Add a new employee </h3>
         
-        <form>
+        <form id="add-employee" >
             <div class="form-input">
                 <label for="fname">First name: </label>
                 <input type="text" id="fname" name="fname" placeholder="enter first name" v-model="employee.firstName">
@@ -10,7 +10,7 @@
             <div class="form-input">
                 <label for="lname">Last name: </label>
                 <input type="text" id="lname" name="lname" placeholder="enter last name" v-model="employee.lastName">
-            </div>
+            </div><br>
 
             <div class="form-input">
                 <label for="address1">Street: </label>
@@ -35,7 +35,7 @@
             <div class="form-input">
                 <label for="country">Country: </label>
                 <input type="text" id="country" name="country" placeholder="2 character format" v-model="address.country">
-            </div>
+            </div><br>
 
             <div class="form-input">
                 <label for="contact">Contact email: </label>
@@ -74,19 +74,17 @@
             </div>
             <div class="form-input">
                 <label for="assignedto">Assigned to: </label>
-                <select id="assignedto" name="assignedto">
+                <select id="assignedto" name="assignedto" v-model="employee.assignedTo">
                     <option value="">N/A</option>
                     <option v-for="supervisor in supervisors" v-bind:key="supervisor.id" :value="supervisor.id">
                         {{supervisor.firstName}} {{supervisor.lastName}}
                     </option>
                 </select>
-            </div>
+            </div><br>
             
-
             <button v-bind:disabled="!isValidForm" v-on:click.prevent="addEmployee"> Submit </button>
+            <button v-on:click.prevent="cancel"> Cancel </button>
         </form>
-
-        <button v-on:click.prevent="cancel"> Cancel </button>
     </div>
 </template>
 
@@ -103,8 +101,8 @@ export default {
                 birthDate: "",
                 hiredDate: "",
                 role: "",
-                businessUnit: "",
-                assignedTo: ""
+                businessUnit: " ",
+                assignedTo: " "
             },
             address: {
                 street: "",
@@ -119,7 +117,10 @@ export default {
     },
     computed: {
         isValidForm() {
-            return true;
+            return this.employee.firstName != null && this.employee.lastName != null && this.employee.companyEmail != null 
+                && this.employee.birthDate != null && this.employee.hiredDate != null && this.employee.role != null 
+                && this.address.street != null && this.address.city != null && this.address.region != null 
+                && this.address.postal != null && this.address.country != null;
         }
     },
     created() {
@@ -130,9 +131,12 @@ export default {
         getSupervisors() {
             fetch('http://localhost:8080/employeeapp/employees/supervisors')
             .then ( (response) => {return response.json()})
-            .then ( (supervisorData) => {this.supervisors = supervisorData;})
+            .then ( (supervisorData) => {
+                this.supervisors = supervisorData;
+            })
             .catch( (err) => {console.log(err)})
         },
+
         addEmployee() {
             this.employee.address = this.address;
             
@@ -147,12 +151,10 @@ export default {
             )
             .then ( (response) => {
                 if(response.ok) {
-                    console.log("Employee successfully added to database!");
                     this.cancel();
                 }
             })
             .catch ( (err) => {
-                window.alert("Failed to create new employee");
                 console.error(err)
             })
         },
@@ -165,5 +167,7 @@ export default {
 </script>
 
 <style>
-
+    #add-employee-form {
+        text-align: center;
+    }
 </style>

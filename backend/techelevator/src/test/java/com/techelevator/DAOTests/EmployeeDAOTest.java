@@ -64,8 +64,8 @@ public class EmployeeDAOTest {
 
 	@Test
 	public void createEmployee_adds_employee_to_database() {
-		Field field = testField("Field newname", "Field newtype");
-		Skill skill = testSkill(field, 24, "Skill summary");
+//		Field field = testField("Field newname", "Field newtype");
+//		Skill skill = testSkill(field, 24, "Skill summary");
 		Address address = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
 		
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
@@ -77,7 +77,7 @@ public class EmployeeDAOTest {
 		}
 		
 		List<Skill> skillList = new ArrayList<>();
-		skillList.add(skill);
+//		skillList.add(skill);
 		
 		Employee employee = testEmployee("First", "Last", address, "test@site.com", "test@company.com", 
 				"1996-01-01", "2020-06-01", "Test Role", "Test Unit", skillList, "");
@@ -115,11 +115,11 @@ public class EmployeeDAOTest {
 	
 	@Test
 	public void getEmployeeById_returns_proper_employee() {
-		Field field = testField("Field newname", "Field newtype");
-		Skill skill = testSkill(field, 24, "Skill summary");
+//		Field field = testField("Field newname", "Field newtype");
+//		Skill skill = testSkill(field, 24, "Skill summary");
 		
 		List<Skill> skillList = new ArrayList<>();
-		skillList.add(skill);
+//		skillList.add(skill);
 		
 		Address address = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
 		Employee employee = testEmployee("First", "Last", address, "test@site.com", "test@company.com", 
@@ -131,11 +131,11 @@ public class EmployeeDAOTest {
 	
 	@Test
 	public void updateEmployeeById_updates_proper_employee() {
-		Field field = testField("Field newname", "Field newtype");
-		Skill skill = testSkill(field, 24, "Skill summary");
+//		Field field = testField("Field newname", "Field newtype");
+//		Skill skill = testSkill(field, 24, "Skill summary");
 		
 		List<Skill> skillList = new ArrayList<>();
-		skillList.add(skill);
+//		skillList.add(skill);
 		
 		Address address = testAddress("Test Street", "", "Test City", "MI", "48074", "US");
 		Address address2 = testAddress("Test Highway", "Test Condo", "Test Village", "MI", "48072", "US");
