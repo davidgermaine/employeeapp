@@ -109,5 +109,31 @@ public class AppController {
 		skillDAO.createSkill(skill);
 		employeeDAO.addSkillToEmployee(employeeId, skill.getId());
 	}
+	
+	@GetMapping("/employees/{employeeId}/skills/{skillId}")
+	public Skill getSkillFromEmployeeIdAndSkillId(@PathVariable String employeeId, @PathVariable String skillId) {
+		List<Skill> skillList = employeeDAO.getAllSkillsByEmployeeId(employeeId);
+		Skill skill = skillDAO.getSkillById(skillId);
+		for (Skill skillItem : skillList) {
+			if (skill.getId().equals(skillItem.getId())) {
+				return skill;
+			}
+		}
+		return null;
+	}
+	
+	@PutMapping("/employees/{employeeId}/skills/{skillId}")
+	@ResponseStatus(HttpStatus.OK)
+	public void updateSkillWithEmployeeAndSkillId(@RequestBody Skill skill, @PathVariable String employeeId, @PathVariable String skillId) {
+		Field field = skill.getField();
+		fieldDAO.updateFieldById(field.getId(), field);
+		skillDAO.updateSkillById(skillId, skill);
+	}
+	
+	@DeleteMapping("/employees/{employeeId}/skills/{skillId}")
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteEmployeeSkillWithId(@PathVariable String employeeId, @PathVariable String skillId) {
+		employeeDAO.deleteSkillFromEmployeeById(employeeId, skillId);
+	}
 
 }

@@ -46,26 +46,19 @@
                     <div class="header">
                         Employee Skills
                     </div><br>
-                    <div id="add-skill-button">
+                    <div id="add-skill-button" v-if="!shouldShowEditSkillForm">
                         <button v-on:click.prevent="showAddSkillForm"> Add skill </button>
                     </div><br>
                     <div id="skills" v-if="shouldShowSkills">
-                        <div v-for="skill in skills" :key="skill.id" class="skill">
-                            <div id="skill-info">
-                                <div class="tiny-header">Skill: </div>  {{skill.field.name}} {{skill.field.type}}<br>
-                                <div class="tiny-header">Experience: </div>  {{skill.experience}} months<br>
-                                <div class="tiny-header">Description: </div>  {{skill.summary}}
-                            </div>
-                            <div id="edit-skill-button">
-                                <button v-on:click.prevent=""> Edit Skill </button>
-                            </div>
+                        <div v-for="skill in skills" :key="skill.id">
+                            <SkillInfo :skill="skill" @editThisSkill="showEditSkillForm"/>
                         </div>
                     </div>
                     <div v-if="shouldShowAddSkillForm">
                         <AddSkill v-on:returnToEmployee="showEmployeeInfo" v-bind:employeeId="employee.id"/>
                     </div>
                     <div v-if="shouldShowEditSkillForm">
-
+                        <EditSkill v-bind:initial="selectedSkillId" v-bind:anEmployee="selectedEmployeeId" @returnToEmployee="showEmployeeInfo"/>
                     </div>
                 </div>
             </div>
@@ -75,6 +68,8 @@
 
 <script>
 import AddSkill from '@/components/AddSkill.vue'
+import SkillInfo from '@/components/SkillInfo.vue'
+import EditSkill from '@/components/EditSkill.vue'
 
 export default {
     data() {
@@ -101,6 +96,8 @@ export default {
                 assignedTo: " "
             },
             skills: [],
+            selectedSkillId: "",
+            selectedEmployeeId: "",
             shouldShowSkills: true,
             shouldShowAddSkillForm: false,
             shouldShowEditSkillForm: false,
@@ -121,6 +118,14 @@ export default {
             this.shouldShowSkills = false;
             this.shouldShowAddSkillForm = true;
             this.shouldShowEditSkillForm = false;
+        },
+
+        showEditSkillForm(skillId) {
+            this.shouldShowSkills = false;
+            this.shouldShowAddSkillForm = false;
+            this.shouldShowEditSkillForm = true;
+            this.selectedSkillId = skillId;
+            this.selectedEmployeeId = this.employeeId;
         },
 
         getEmployeeFromId() {
@@ -170,7 +175,9 @@ export default {
         this.getEmployeeFromId();
     },
     components: {
-        AddSkill
+        AddSkill,
+        EditSkill,
+        SkillInfo
     }
 }
 </script>
@@ -247,31 +254,6 @@ export default {
     .mini-header {
         font-weight: bold;
         font-size: 20px;
-    }
-
-    .skill {
-        border: 2px solid black;
-        margin: 8px 0 8px 0;
-        padding: 8px 8px 8px 8px;
-        display: grid;
-        grid-template-columns: 70% 20% 10%;
-        grid-template-areas: "skill-info . edit-skill-button"
-    }
-
-    .tiny-header {
-        font-weight: bold;
-        display: inline-block;
-    }
-
-    #skill-info {
-        display: inline-block;
-        grid-area: skill-info
-    }
-
-    #edit-skill-button {
-        display: inline-block;
-        text-align: right;
-        grid-area: edit-skill-button
     }
 
 </style>

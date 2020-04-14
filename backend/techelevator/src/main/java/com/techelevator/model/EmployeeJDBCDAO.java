@@ -16,12 +16,14 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
 	
 	private final JdbcTemplate jdbcTemplate;
 	private AddressJDBCDAO addressDAO;
+	private SkillJDBCDAO skillDAO;
 	private FieldJDBCDAO fieldDAO;
 
     @Autowired
     public EmployeeJDBCDAO(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.addressDAO = new AddressJDBCDAO(dataSource);
+        this.skillDAO = new SkillJDBCDAO(dataSource);
         this.fieldDAO = new FieldJDBCDAO(dataSource);
     }
     
@@ -176,7 +178,13 @@ public class EmployeeJDBCDAO implements EmployeeDAO {
 	@Override
 	public void deleteSkillFromEmployeeById(String employeeId, String skillId) {
 		String sql = "DELETE FROM employee_skills WHERE employee = ? AND skill = ?";
+		String sql2 = "DELETE FROM skills WHERE id = ?";
+		String sql3 = "DELETE FROM fields WHERE id = ?";
+		
+		Skill skill = skillDAO.getSkillById(skillId);
 		jdbcTemplate.update(sql, employeeId, skillId);
+		jdbcTemplate.update(sql2, skillId);
+		jdbcTemplate.update(sql3, skill.getField().getId());
 	}
 	
 	

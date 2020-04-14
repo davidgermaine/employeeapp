@@ -7,7 +7,7 @@ public interface FieldDAO {
 	public void createField(Field field);
 	public Field getFieldById(String fieldId);
 	public List<Field> getAllFields();
-	//public Field getFieldBySkillId(String skillId);
+	public void updateFieldById(String fieldId, Field field);
 	public void deleteFieldById(String fieldId);
 
 }

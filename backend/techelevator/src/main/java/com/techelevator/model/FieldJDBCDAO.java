@@ -64,11 +64,11 @@ public class FieldJDBCDAO implements FieldDAO {
 		return fieldList;
 	}
 
-//	@Override
-//	public Field getFieldBySkillId(String skillId) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	@Override
+	public void updateFieldById(String fieldId, Field field) {
+		String sql = "UPDATE fields SET name = ?, type = ? WHERE id = ?";
+		jdbcTemplate.update(sql, field.getName(), field.getType(), fieldId);
+	}
 
 	@Override
 	public void deleteFieldById(String fieldId) {
