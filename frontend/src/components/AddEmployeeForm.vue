@@ -101,8 +101,8 @@ export default {
                 birthDate: "",
                 hiredDate: "",
                 role: "",
-                businessUnit: " ",
-                assignedTo: " "
+                businessUnit: "",
+                assignedTo: ""
             },
             address: {
                 street: "",
@@ -158,6 +158,7 @@ export default {
                 console.error(err)
             })
         },
+        
         cancel() {
             this.$emit('hideAddEmployeeForm');
         }

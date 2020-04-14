@@ -2,7 +2,9 @@
   <div class="employees">
     <div v-if="shouldShowEmployees" id="employee-list">
       <button id="addEmployeeForm" v-on:click="showAddEmployeeForm"> Add Employee </button>
-      <EmployeeInfo/>
+      <div v-for="employee in allEmployees" :key="employee.id" :selectedEmployee="employee">
+        <EmployeeList v-bind:employee="employee" id="list-of-employees"/>
+      </div>
     </div>
     <div v-if="shouldShowAddEmployeeForm">
       <AddEmployeeForm @hideAddEmployeeForm="showEmployeeForm"/>
@@ -11,7 +13,7 @@
 </template>
 
 <script>
-import EmployeeInfo from '@/components/EmployeeInfo.vue'
+import EmployeeList from '@/components/EmployeeList.vue'
 import AddEmployeeForm from '@/components/AddEmployeeForm.vue'
 
 export default {
@@ -19,6 +21,8 @@ export default {
     return {
       shouldShowEmployees: true,
       shouldShowAddEmployeeForm: false,
+      allEmployees: [],
+      selectedEmployee: {}
     }
   },
   methods: {
@@ -26,20 +30,40 @@ export default {
       this.shouldShowEmployees = false;
       this.shouldShowAddEmployeeForm = true;
     },
+
     showEmployeeForm() {
       this.shouldShowEmployees = true;
       this.shouldShowAddEmployeeForm = false;
+      this.getEmployeeList();
+    },
+    
+    getEmployeeList() {
+      fetch('http://localhost:8080/employeeapp/employees')
+      .then ( (response) => {return response.json()})
+      .then ( (employeeData) => {
+        this.allEmployees = employeeData;
+      })
+      .catch( (err) => {console.log(err)});
     }
   },
   components: {
-    EmployeeInfo,
+    EmployeeList,
     AddEmployeeForm
-  }
+  },
+  created() {
+    this.getEmployeeList();
+  },
 }
 </script>
 
 <style scoped>
   #employee-list {
+    margin: 8px 8px 8px 8px;
+  }
+
+  #list-of-employees {
+    border: 2px solid black;
+    padding: 8px 8px 8px 8px;
     margin: 8px 8px 8px 8px;
   }
 </style>
