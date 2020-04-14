@@ -20,6 +20,7 @@ import com.techelevator.model.AddressDAO;
 import com.techelevator.model.Employee;
 import com.techelevator.model.EmployeeDAO;
 import com.techelevator.model.FieldDAO;
+import com.techelevator.model.Skill;
 import com.techelevator.model.SkillDAO;
 
 @RestController
@@ -86,6 +87,16 @@ public class AppController {
 		String addressId = employeeDAO.getEmployeeById(employeeId).getAddress().getId();
 		employeeDAO.deleteEmployeeById(employeeId);
 		addressDAO.deleteAddressById(addressId);
+	}
+	
+	
+	
+	
+	
+	@GetMapping("/employees/{employeeId}/skills")
+	public List<Skill> getSkillsFromEmployeeId(@PathVariable String employeeId) {
+		List<Skill> skillList = employeeDAO.getAllSkillsByEmployeeId(employeeId);
+		return skillList;
 	}
 
 }

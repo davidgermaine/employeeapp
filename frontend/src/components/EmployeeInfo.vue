@@ -36,6 +36,22 @@
                 <div id="buttons2">
                     <button v-on:click.prevent="edit"> Edit </button>
                 </div>
+
+                <div id="space3"><br></div>
+
+                <div id="skills2">
+                    <div id="skills-header">
+                        Employee Skills
+                    </div><br>
+                    <div id="add-skill-button">
+                        <button v-on:click.prevent=""> Add skill </button>
+                    </div><br>
+                    <div id="skills">
+                        <div v-for="skill in skills" :key="skill.id" class="skill">
+                            {{skill.name}}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -65,7 +81,9 @@ export default {
                 role: "",
                 businessUnit: " ",
                 assignedTo: " "
-            }
+            },
+
+            skills: []
         }
     },
     props: {
@@ -85,6 +103,24 @@ export default {
             .then ( (response) => {return response.json()})
             .then ( (returnedEmployee) => {
                 this.employee = returnedEmployee;
+                this.getEmployeeFromId();
+            })
+            .catch( (err) => {console.log(err)});
+        },
+
+        getEmployeeSkills() {
+            fetch(`http://localhost:8080/employeeapp/employees/${this.employeeId}/skills`,
+                {
+                    method: 'GET',
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    }
+                }
+            )
+            .then ( (response) => {return response.json()})
+            .then ( (skillsData) => {
+                this.skills = skillsData;
             })
             .catch( (err) => {console.log(err)});
         },
@@ -114,7 +150,9 @@ export default {
             ". header2 . emails2 ."
             "space2 space2 space2 space2 space2"
             ". address2 . dates2 ."
-            ". . . buttons2 .";
+            ". . . buttons2 ."
+            "space3 space3 space3 space3 space3"
+            ". skills2 skills2 skills2 .";
 
     }
 
@@ -127,6 +165,7 @@ export default {
         display: inline-block;
         text-align: left;
         font-weight: bold;
+        font-size: 32px;
         grid-area: name2;
     }
 
@@ -137,6 +176,10 @@ export default {
 
     #space2 {
         grid-area: space2;
+    }
+
+    #space3 {
+        grid-area: space3;
     }
 
     #dates2 {
@@ -157,6 +200,25 @@ export default {
     #buttons2 {
         grid-area: buttons2;
         text-align: right;
+    }
+
+    #skills2 {
+        text-align: left;
+        grid-area: skills2;
+    }
+
+    #skills2 > #skills-header {
+        font-weight: bold;
+        font-size: 24px;
+    }
+
+    #skills {
+        border: 2px solid black;
+        padding: 8px 8px 8px 8px;
+    }
+
+    .skill {
+        border: 1px solid black;
     }
 
 </style>
