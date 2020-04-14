@@ -19,6 +19,7 @@ import com.techelevator.model.Address;
 import com.techelevator.model.AddressDAO;
 import com.techelevator.model.Employee;
 import com.techelevator.model.EmployeeDAO;
+import com.techelevator.model.Field;
 import com.techelevator.model.FieldDAO;
 import com.techelevator.model.Skill;
 import com.techelevator.model.SkillDAO;
@@ -97,6 +98,16 @@ public class AppController {
 	public List<Skill> getSkillsFromEmployeeId(@PathVariable String employeeId) {
 		List<Skill> skillList = employeeDAO.getAllSkillsByEmployeeId(employeeId);
 		return skillList;
+	}
+	
+	@PostMapping("/employees/{employeeId}/skills")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void addSkillToEmployee(@RequestBody Skill skill, @PathVariable String employeeId) {
+		Field field = skill.getField();
+		fieldDAO.createField(field);
+		skill.getField().setId(field.getId());
+		skillDAO.createSkill(skill);
+		employeeDAO.addSkillToEmployee(employeeId, skill.getId());
 	}
 
 }

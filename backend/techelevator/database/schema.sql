@@ -12,7 +12,7 @@ BEGIN TRANSACTION;
 
 CREATE TABLE fields (
   id varchar(40) PRIMARY KEY,
-  "name" varchar(255) NOT NULL UNIQUE,
+  "name" varchar(255) NOT NULL,
   "type" varchar(255) NOT NULL
   --role varchar(255) NOT NULL default('user')
 );

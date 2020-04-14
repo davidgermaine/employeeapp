@@ -1,7 +1,9 @@
 <template>
   <div class="employees">
     <div v-if="shouldShowEmployees" id="employee-list">
-      <button id="addEmployeeForm" v-on:click="showAddEmployeeForm"> Add Employee </button>
+      <div id="button-margin">
+        <button id="addEmployeeForm" v-on:click="showAddEmployeeForm"> Add Employee </button>
+      </div>
       <div v-for="employee in allEmployees" :key="employee.id">
         <EmployeeList v-bind:employee="employee" id="list-of-employees" :selectedEmployeeId="employee.id" @showMoreEmployeeInfo="showMoreEmployeeInfo"/>
       </div>
@@ -97,7 +99,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+  #button-margin {
+      margin: 0 0 0 8px;
+  }
+
   #employee-list {
     margin: 8px 8px 8px 8px;
   }
